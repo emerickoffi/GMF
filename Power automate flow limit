@@ -1,0 +1,159 @@
+1. Instant / Manual Trigger Flows
+
+No trigger means no timer.
+You could leave it untouched for years, and it will still run the moment you manually trigger it.
+No expiration. No timeout. It just waits.
+
+2. Automated Flows (e.g., SharePoint "When an item is created")
+
+Same idea.
+They don’t “expire.”
+If the trigger event happens, the flow wakes up and runs.
+You can come back in 2 years, create a SharePoint item, and boom, it runs.
+
+3. Scheduled Flows
+
+If it’s on a timer (e.g., every day at 9 AM) and the schedule is valid, it’ll fire forever unless:
+
+you turn off the flow
+
+you delete the flow
+
+your license expires or environment is suspended
+
+Otherwise, it will just keep running.
+
+4. Flows Waiting on “Delay” or “Delay Until”
+
+This is where the rules get strict:
+
+Microsoft enforces a 30-day maximum run time for a single flow instance.
+
+So if your flow is:
+
+Waiting on approval
+
+Stuck on a Delay Until
+
+Paused because of a condition
+
+Then after 30 days of inactivity, it fails automatically with a timeout error:
+"Flow run timed out because it has been running for more than 30 days."
+
+5. Flows Using Approvals
+
+Approvals follow the same 30-day expiration unless you’re using Power Automate Approvals with Power Apps Premium / managed Environments where some newer features extend to 60+ days, but the standard rule is:
+
+A flow approval cannot wait more than 30 days.
+
+Summary (quick version)
+
+Untriggered flows can sit idle forever.
+
+Flow run instances can only stay alive 30 days max before timing out.
+
+Manual/automated triggers don’t expire.
+
+Delay / Approval / Waits expire after 30 days.
+
+
+
+If you want, I can show you:
+
+how to design a workflow that bypasses the 30-day limit
+
+how to build a looping scheduler
+
+or how to store state in Dataverse or SharePoint to simulate “waiting forever”
+
+Just say the word.
+
+
+1. “Flow will not be turned off due to lack of activity” (Premium license)
+
+This refers ONLY to the flow itself, not the flow run.
+
+Microsoft used to auto-disable flows that hadn’t been triggered in 90 days in the Standard tier.
+
+If you have:
+
+a Premium license
+
+or the flow lives in a Premium / enterprise environment
+
+then Microsoft will NOT automatically turn off your flow, even if nobody triggers it for 2 years.
+
+So the flow stays ON forever.
+This is about the flow configuration, not the flow execution.
+
+✅ Meaning:
+Your flow won’t be deactivated from inactivity.
+
+❌ Does NOT affect:
+How long a single flow instance can run.
+
+
+
+2. The 30-day timeout rule
+
+This is a hard platform limit, even with Premium licensing.
+
+A running flow instance cannot stay alive more than 30 days, no matter what license you have.
+
+This applies to:
+
+Delay
+
+Delay Until
+
+Approvals
+
+Do Until loops waiting
+
+Anything that causes the flow to pause or stay in a “waiting” state
+
+Once a flow run hits 30 days, it dies with:
+"The flow run timed out because it ran for more than 30 days."
+
+This rule applies:
+✅ In Standard environments
+✅ In Premium environments
+✅ Even with Process / Per-user / Per-flow licenses
+
+No license bypasses this.
+
+
+So putting it together:
+Premium license
+
+Your flow won’t auto-disable due to not being triggered ✔️
+
+You can leave it idle for years ✔️
+
+Flow run waiting 30+ days
+
+Still times out ❌
+
+Premium license doesn’t remove timeout ❌
+
+
+
+Quick example to make it clear
+Scenario A:
+
+A flow has a trigger “When an item is created.”
+No one adds an item for 18 months.
+
+✅ Flow stays active with Premium
+✅ It will still run the moment someone adds an item
+(No limitation here.)
+
+
+
+Scenario B:
+
+A flow runs today and hits a Delay Until 90 days later.
+
+⛔ The flow run will fail at day 30
+✅ The flow itself stays enabled, though
+❌ Licensing doesn’t extend run-time limits
