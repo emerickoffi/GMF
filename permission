@@ -1,0 +1,18 @@
+With(
+    {
+        varRole: LookUp(
+            AppPermissions,
+            Lower(UserEmail) = Lower(User().Email),
+            Role
+        )
+    },
+    If(
+        varRole = "Admin",
+        scrAdmin,
+        varRole = "Manager",
+        scrManager,
+        varRole = "Employee",
+        scrEmployee,
+        scrNoAccess
+    )
+)
