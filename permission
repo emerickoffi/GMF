@@ -16,3 +16,19 @@ With(
         scrNoAccess
     )
 )
+
+
+--------------------
+
+
+Patch(
+    'New DR Series',
+    varItem,
+    {
+        Title: DataCardValue_Title.Text,
+        Requestor: DataCardValue_Requestor.Selected,
+        'Date Received': DataCardValue_DateReceived.SelectedDate,
+        'Series Type': DataCardValue_SeriesType.Selected
+    }
+);
+Notify("Record updated successfully", NotificationType.Success)
